@@ -18,7 +18,7 @@ const corsOptions = {
     origin: [
     'http://localhost:4200',
     'https://tradex-supercoin.vercel.app',
-    'https://www.tradexcoinpro.com',
+    'https://signalswaps.vercel.app/'
   ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
