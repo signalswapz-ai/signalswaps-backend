@@ -1,23 +1,25 @@
 const authService = require('../services/authService');
-// const { sendMail } = require('../services/mail.service');
-// const { welcomeTemplate } = require('../templates/welcome.template');
+const { sendMail } = require('../services/mail.service');
+const { welcomeTemplate } = require('../templates/welcome.template');
+const ActivationCodeService = require('../services/activationCode.service');
 
 class AuthController {
   async register(req, res, next) {
     try {
-      const { email, password, name } = req.body;
-      const result = await authService.register(email, password, name);
+      const { email } = req.body;
+      const result = await authService.register(email);
+       const activationCode = await ActivationCodeService.generateActivationCode(email);
       // call email service here (after successful register)
-      // try {
-      //   await sendMail({
-      //     to: email,
-      //     subject: 'Welcome!',
-      //     html: welcomeTemplate(name)
-      //   });
-      // } catch (mailError) {
-      //   // do not block registration if email fails
-      //   console.error('Welcome email failed:', mailError);
-      // }
+      try {
+        await sendMail({
+          to: email,
+          subject: 'Welcome!',
+          html: welcomeTemplate(activationCode)
+        });
+      } catch (mailError) {
+        // do not block registration if email fails
+        console.error('Welcome email failed:', mailError);
+      }
       res.status(201).json({
         success: true,
         message: 'User registered successfully',
