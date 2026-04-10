@@ -1,6 +1,7 @@
 const jwt = require('jsonwebtoken');
 const User = require('../models/authModel');
 const { generateToken } = require('../utils/jwt');
+const activationCodeService = require('./activationCode.service');
 
 class AuthService {
   async register(email, password, name) {
@@ -23,6 +24,15 @@ class AuthService {
         email: user.email,
         name: user.name
       }
+    };
+  }
+   async verifyActivationCode(email, code) {
+    const userSummary = await activationCodeService.verifyActivationCode(email, code);
+    const user = await User.findByEmail(email);
+    const token = generateToken(user);
+    return {
+      token,
+      user: userSummary,
     };
   }
   async login(email, password) {

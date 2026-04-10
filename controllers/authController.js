@@ -29,6 +29,25 @@ class AuthController {
       next(error);
     }
   }
+  async verifyActivationCode(req, res, next) {
+    try {
+      const { email, code } = req.body;
+      if (!email || !code) {
+        return res.status(400).json({
+          success: false,
+          message: 'email and code are required',
+        });
+      }
+      const result = await authService.verifyActivationCode(email, code);
+      res.status(200).json({
+        success: true,
+        message: 'Email verified successfully',
+        data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
   async login(req, res, next) {
     try {
       const { email, password } = req.body;
@@ -42,8 +61,6 @@ class AuthController {
       next(error);
     }
   }
-
-
   async resetPassword(req, res, next) {
     try {
       const { email, password, confirmPassword } = req.body;
