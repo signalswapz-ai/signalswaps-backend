@@ -35,6 +35,22 @@ class AuthService {
       user: userSummary,
     };
   }
+  async createPassword(email, password) {
+    const user = await User.findByEmail(email);
+    if (!user) {
+      const err = new Error('User not found');
+      err.statusCode = 404;
+      throw err;
+    }
+    const updated = await User.updatePassword(email, password);
+    return {
+      user: {
+        id: updated.id,
+        email: updated.email,
+      },
+      message: 'Password created successfully',
+    };
+  }
   async login(email, password) {
     const user = await User.login( email, password );
     if (!user) {

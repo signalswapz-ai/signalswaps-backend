@@ -8,13 +8,13 @@ class AuthController {
     try {
       const { email } = req.body;
       const result = await authService.register(email);
-       const activationCode = await ActivationCodeService.generateActivationCode(email);
+       const otp = await ActivationCodeService.generateActivationCode(email);
       // call email service here (after successful register)
       try {
         await sendMail({
           to: email,
           subject: 'Welcome!',
-          html: welcomeTemplate(activationCode)
+          html: welcomeTemplate(otp)
         });
       } catch (mailError) {
         // do not block registration if email fails
@@ -43,6 +43,25 @@ class AuthController {
         success: true,
         message: 'Email verified successfully',
         data: result,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+   async createPassword(req, res, next) {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: 'email and password are required',
+        });
+      }
+      const result = await authService.createPassword(email, password);
+      res.status(200).json({
+        success: true,
+        message: result.message,
+        data: { user: result.user },
       });
     } catch (error) {
       next(error);

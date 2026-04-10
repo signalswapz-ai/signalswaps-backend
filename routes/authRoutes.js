@@ -5,6 +5,7 @@ const authController = require('../controllers/authController');
 // Public routes
 router.post('/register', authController.register);
 router.post('/verify-activation-code', authController.verifyActivationCode);
+router.post('/create-password', authController.createPassword);
 router.post('/login', authController.login);
 router.post('/reset-password', authController.resetPassword);
 
