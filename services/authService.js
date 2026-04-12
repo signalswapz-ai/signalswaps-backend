@@ -4,7 +4,7 @@ const { generateToken } = require('../utils/jwt');
 const activationCodeService = require('./activationCode.service');
 
 class AuthService {
-  async register(email, password, name) {
+  async register(email) {
     // Check if user exists
     const existingUser = await User.findByEmail(email);
     if (existingUser) {
@@ -13,16 +13,13 @@ class AuthService {
 
     // Create user
     const userData = {
-      email,
-      password: password,
-      name
+      email
     };
     const user = await User.create(userData);
     return {
       user: {
         id: user.id,
-        email: user.email,
-        name: user.name
+        email: user.email
       }
     };
   }

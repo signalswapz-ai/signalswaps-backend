@@ -24,9 +24,6 @@ class User {
     if (userData.email !== undefined) allowedFields.email = userData.email;
     if (userData.password !== undefined) allowedFields.password = userData.password;
     if (userData.name !== undefined) allowedFields.name = userData.name;
-    if (userData.photoUrl !== undefined) allowedFields.photoUrl = userData.photoUrl;
-    if (userData.googleId !== undefined) allowedFields.googleId = userData.googleId;
-    if (userData.provider !== undefined) allowedFields.provider = userData.provider;
     if (userData.lastLogin !== undefined) allowedFields.lastLogin = userData.lastLogin;
   
 
