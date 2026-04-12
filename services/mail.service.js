@@ -14,7 +14,7 @@ const sendMail = async ({ to, subject, html }) => {
     console.log('📧 Sending email to:', to);
 
     const info = await transporter.sendMail({
-      from: `"Your App" <${process.env.EMAIL_USER}>`,
+      from: `"SignalSwaps" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
