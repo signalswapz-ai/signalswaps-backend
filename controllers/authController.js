@@ -8,13 +8,13 @@ class AuthController {
     try {
       const { email } = req.body;
       const result = await authService.register(email);
-       const otp = await ActivationCodeService.generateActivationCode(email);
+       const code = await ActivationCodeService.generateActivationCode(email);
       // call email service here (after successful register)
       try {
         await sendMail({
           to: email,
           subject: 'Welcome!',
-          html: welcomeTemplate(otp)
+          html: welcomeTemplate(code)
         });
       } catch (mailError) {
         // do not block registration if email fails

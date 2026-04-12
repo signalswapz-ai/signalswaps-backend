@@ -1,6 +1,5 @@
 const BRAND = 'Signal Swaps';
 const SITE_URL = 'https://signalswaps.com';
-const LOGO_URL = `${SITE_URL}/assets/logo.png`; // or your CDN path
 
 const welcomeTemplate = (activationCode) => {
   const year = new Date().getFullYear();
