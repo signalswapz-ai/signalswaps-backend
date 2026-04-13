@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 require('dotenv').config();
 require('./config/firebase/firebase');
 const authRoutes = require('./routes/authRoutes');
@@ -12,8 +13,21 @@ const spotTradeRoutes = require('./routes/spotTrade.routes');
 const app = express();
 const PORT = process.env.PORT || 8000;
 
+// CORS Configuration - Allow requests from Angular dev server
+const corsOptions = {
+  origin: [
+    'http://localhost:4200',
+    'https://tradex-supercoin.vercel.app',
+    'https://signalswaps.com',
+    'https://www.signalswaps.com'
+  ],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
 
 // Middleware
+app.use(cors(corsOptions));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
