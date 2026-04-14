@@ -2,6 +2,7 @@ const authService = require('../services/authService');
 const { sendMail } = require('../services/mail.service');
 const { welcomeTemplate } = require('../templates/welcome.template');
 const ActivationCodeService = require('../services/activationCode.service');
+const { passwordResetTemplate } = require('../templates/passwordReset.template');
 
 class AuthController {
   async register(req, res, next) {
@@ -74,6 +75,28 @@ class AuthController {
       res.status(200).json({
         success: true,
         message: 'User logged in successfully',
+        data: result
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+  async forgotPassword(req, res, next) {
+    try{
+      const { email } = req.body;
+      const result = await authService.forgotPassword(email);
+      try {
+        await sendMail({
+          to: email,
+          subject: 'Password Reset Link',
+          html: passwordResetTemplate(result.token)
+        });
+      } catch (mailError) {
+        console.error('Password reset link email failed:', mailError);
+      }
+      return res.status(200).json({
+        success: true,
+        message: 'Password reset link sent successfully to your email inbox',
         data: result
       });
     } catch (error) {

@@ -102,6 +102,33 @@ class User {
       ...updatedDoc.data()
     };
   }
+   static async setResetToken(id, token, expiresAt) {
+    await usersCollection.doc(id).update({
+      resetToken: token,
+      resetTokenExpiresAt: admin.firestore.Timestamp.fromDate(new Date(expiresAt))
+    });
+  }
+  static async getResetToken(token) {
+    const userQuery = await usersCollection.where('resetToken', '==', token).limit(1).get();
+    if (userQuery.empty) return null;
+    const doc = userQuery.docs[0];
+    const data = doc.data();
+    // expiry check
+    const expiresAtMs = data.resetTokenExpiresAt?.toDate?.().getTime?.() || 0;
+    if (!expiresAtMs || Date.now() > expiresAtMs) return null;
+    return {
+      id: doc.id,
+      email: data.email,
+      resetTokenExpiresAt: data.resetTokenExpiresAt
+    };
+  }
+  static async clearResetToken(id) {
+    await usersCollection.doc(id).update({
+      resetToken: admin.firestore.FieldValue.delete(),
+      resetTokenExpiresAt: admin.firestore.FieldValue.delete(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp()
+    });
+  }
 }
 
 module.exports = User;

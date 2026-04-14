@@ -66,6 +66,23 @@ class AuthService {
 
 }
 
+ async forgotPassword(email) {
+    const user = await User.findByEmail(email);
+    if (!user) {
+      throw new Error('User not found');
+    }
+
+    const rawToken = crypto.randomBytes(32).toString('hex');
+    const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
+    const expiresAt = Date.now() + 15 * 60 * 1000; // 15 min
+    await User.setResetToken(user.id, rawToken, expiresAt);
+
+    return {
+      token: tokenHash,
+      expiresAt
+    };
+  }
+
 async resetPassword(email, password, confirmPassword) {
   // Validate passwords match
   if (password !== confirmPassword) {
