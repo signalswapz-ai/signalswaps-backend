@@ -2,6 +2,7 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/authModel');
 const { generateToken } = require('../utils/jwt');
 const activationCodeService = require('./activationCode.service');
+const crypto = require('crypto');
 
 class AuthService {
   async register(email) {
