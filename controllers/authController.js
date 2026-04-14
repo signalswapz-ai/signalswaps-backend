@@ -82,9 +82,10 @@ class AuthController {
     }
   }
   async forgotPassword(req, res, next) {
-    try{
+    try {
       const { email } = req.body;
       const result = await authService.forgotPassword(email);
+
       try {
         await sendMail({
           to: email,
@@ -94,19 +95,20 @@ class AuthController {
       } catch (mailError) {
         console.error('Password reset link email failed:', mailError);
       }
+
       return res.status(200).json({
         success: true,
         message: 'Password reset link sent successfully to your email inbox',
-        data: result
+        data: { expiresAt: result.expiresAt }
       });
     } catch (error) {
       next(error);
     }
   }
-  async resetPassword(req, res, next) {
+ async resetPassword(req, res, next) {
     try {
-      const { email, password, confirmPassword } = req.body;
-      const result = await authService.resetPassword(email, password, confirmPassword);
+      const { email, password, confirmPassword, token } = req.body;
+      const result = await authService.resetPassword(email, password, confirmPassword, token);
       res.status(200).json({
         success: true,
         message: 'Password reset successfully',

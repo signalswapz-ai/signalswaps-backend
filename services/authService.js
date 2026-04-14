@@ -66,7 +66,7 @@ class AuthService {
 
 }
 
- async forgotPassword(email) {
+  async forgotPassword(email) {
     const user = await User.findByEmail(email);
     if (!user) {
       throw new Error('User not found');
@@ -75,33 +75,44 @@ class AuthService {
     const rawToken = crypto.randomBytes(32).toString('hex');
     const tokenHash = crypto.createHash('sha256').update(rawToken).digest('hex');
     const expiresAt = Date.now() + 15 * 60 * 1000; // 15 min
-    await User.setResetToken(user.id, rawToken, expiresAt);
+
+    await User.setResetToken(user.id, tokenHash, expiresAt);
 
     return {
-      token: tokenHash,
+      token: rawToken,
       expiresAt
     };
   }
 
-async resetPassword(email, password, confirmPassword) {
-  // Validate passwords match
-  if (password !== confirmPassword) {
-    throw new Error('Passwords do not match');
-  }
+  async resetPassword(email, password, confirmPassword, token) {
+    if (!email || !password || !confirmPassword || !token) {
+      throw new Error('email, password, confirmPassword and token are required');
+    }
 
-  // Check if user exists
-  const user = await User.findByEmail(email);
-  if (!user) {
-    throw new Error('User not found');
-  }
+    if (password !== confirmPassword) {
+      throw new Error('Passwords do not match');
+    }
 
-  // Update password
-  await User.updatePassword(email, password);
-  
-  return {
-    message: 'Password reset successfully'
-  };
-}
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const tokenData = await User.getResetToken(tokenHash);
+    if (!tokenData) {
+      throw new Error('Invalid or expired token');
+    }
+
+    if (tokenData.email !== email) {
+      throw new Error('Invalid token for this email');
+    }
+
+    const expiresAtMs = tokenData.resetTokenExpiresAt?.toDate?.().getTime?.() || 0;
+    if (Date.now() > expiresAtMs) {
+      throw new Error('Token expired');
+    }
+
+    await User.updatePassword(email, password);
+    await User.clearResetToken(tokenData.id);
+
+    return { message: 'Password reset successfully' };
+  }
 
 }
 module.exports = new AuthService();
