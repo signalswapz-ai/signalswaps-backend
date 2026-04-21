@@ -5,17 +5,16 @@ class SpotTradeController {
     //  Create Trade
     async createSpotTrade(req, res, next) {
         try {
-            let { userEmail } = req.body;
+            let { email } = req.body;
 
-            if (!userEmail?.trim()) {
+            if (!email?.trim()) {
                 return res.status(400).json({
                     success: false,
-                    message: 'userEmail is required'
+                    message: 'email is required'
                 });
             }
             const result = await createSpotTrade({
-                ...req.body,
-                userEmail
+                ...req.body
             });
 
             res.status(201).json({
@@ -32,19 +31,20 @@ class SpotTradeController {
     //  Get Trades by Email
     async getSpotTradesByUser(req, res, next) {
         try {
-            let { userEmail } = req.body;
+            let { email } = req.body;
 
-            if (!userEmail?.trim()) {
+            if (!email?.trim()) {
                 return res.status(400).json({
                     success: false,
-                    message: 'userEmail is required'
+                    message: 'email is required'
                 });
             }
-            const data = await getSpotTradesByUser(userEmail);
+            const data = await getSpotTradesByUser(email);
 
             res.status(200).json({
                 success: true,
-                data
+                message: 'Spot trades retrieved successfully',
+                data: data
             });
 
         } catch (error) {

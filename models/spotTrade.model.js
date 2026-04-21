@@ -13,9 +13,9 @@ class SpotTradeModel {
     return { id: doc.id, ...doc.data() };
   }
 
-  static async findByUserEmail(userEmail) {
+  static async findByUserEmail(email) {
     const snap = await spotTradeCollection
-      .where('userEmail', '==', userEmail)
+      .where('email', '==', email)
       .orderBy('createdAt', 'desc')
       .get();
 
