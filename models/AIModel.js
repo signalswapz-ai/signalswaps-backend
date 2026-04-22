@@ -1,11 +1,11 @@
 const admin = require('../config/firebase/firebase');
 const db = admin.firestore();
 const usersCollection = db.collection('users');
-const aiTradesCollection = db.collection('aiTrades');
+const aiTradesCollection = db.collection('ai-trade-history');
 
 class AIModel {
   static async updateBalanceAndAiTrade(AITradeResult) {
-    const user = await usersCollection.where('email', '==', AITradeResult.userEmail).get();
+    const user = await usersCollection.where('email', '==', AITradeResult.email).get();
     if (user.empty) {
       throw new Error('User not found');
     }
@@ -35,7 +35,7 @@ class AIModel {
 
       const tradeRef = aiTradesCollection.doc();
       transaction.set(tradeRef, {
-        userEmail: AITradeResult.userEmail,
+        email: AITradeResult.email,
         tradeDuration: AITradeResult.AiTradeDuration, // e.g., "5 Days AI Trade"
         durationInDays: AITradeResult.tradeDurationInDays, // number
         amount: AITradeResult.userAiEnteredAmount,
@@ -52,9 +52,9 @@ class AIModel {
     return { id: updatedUser.id, ...updatedUser.data() };
   }
 
-  static async userAITradeHistory(userEmail) {
+  static async userAITradeHistory(email) {
     const snap = await aiTradesCollection
-      .where('userEmail', '==', userEmail)
+      .where('email', '==', email)
       .orderBy('tradeCreatedAt', 'desc')
       .get();
 

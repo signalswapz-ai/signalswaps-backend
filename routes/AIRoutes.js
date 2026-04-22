@@ -5,6 +5,5 @@ const { authenticate } = require('../middleware/auth');
 
 // Public routes
 router.post('/user-ai-history',authenticate, AIController.getUserAITradeHistory);
-router.put('/new-trade',authenticate ,AIController.updateBalanceAiTrade);
-
+router.post('/create',authenticate,AIController.updateBalanceAiTrade);
 module.exports = router;

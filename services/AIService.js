@@ -1,26 +1,26 @@
 const AIModel = require('../models/AIModel');
 
 class AIService {
-  async updateUserBalanceinAiTrade(AiTradeDuration, userAiEnteredAmount, userOldBalance, afterAITradeUserBalance, dailyROI, userEmail, tradeDurationInDays) {
+  async updateUserBalanceinAiTrade(AiTradeDuration, userAiEnteredAmount, userOldBalance, afterAITradeUserBalance, dailyROI, email, tradeDurationInDays) {
     const AITradeResult = {
       AiTradeDuration,
       userAiEnteredAmount,
       userOldBalance,
       afterAITradeUserBalance,
       dailyROI,
-      userEmail,
+      email,
       tradeDurationInDays
     };
 
     const updatedUser = await AIModel.updateBalanceAndAiTrade(AITradeResult);
     return updatedUser;
   }
-  async userAITradeHistory(userEmail) {
-    if (!userEmail) {
+  async userAITradeHistory(email) {
+    if (!email) {
       throw new Error('Email is required');
     }
 
-    return AIModel.userAITradeHistory(userEmail);
+    return AIModel.userAITradeHistory(email);
   }
 }
 
