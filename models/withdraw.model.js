@@ -2,7 +2,7 @@ const admin = require('../config/firebase/firebase');
 
 const db = admin.firestore();
 const usersCollection = db.collection('users');
-const withdrawCollection = db.collection('withdraw');
+const withdrawCollection = db.collection('withdraw-history');
 
 class WithdrawModel {
   static async userExistsByEmail(email) {
@@ -19,9 +19,9 @@ class WithdrawModel {
     return { id: doc.id, ...doc.data() };
   }
 
-  static async findByUserEmail(userEmail) {
+  static async findByUserEmail(email) {
     const snap = await withdrawCollection
-      .where('userEmail', '==', userEmail)
+      .where('email', '==', email)
       .orderBy('createdAt', 'desc')
       .get();
 

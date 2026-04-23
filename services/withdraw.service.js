@@ -1,8 +1,8 @@
 const WithdrawModel = require('../models/withdraw.model');
 
 const createWithdraw = async (payload) => {
-  const email = payload.userEmail?.trim();
-  if (!email) throw Object.assign(new Error('userEmail is required'), { statusCode: 400 });
+  const email = payload.email?.trim();
+  if (!email) throw Object.assign(new Error('email is required'), { statusCode: 400 });
 
   const ok = await WithdrawModel.userExistsByEmail(email);
   if (!ok) {
@@ -14,8 +14,8 @@ const createWithdraw = async (payload) => {
   return WithdrawModel.create(payload);
 };
 
-const getWithdrawsByUser = async (userEmail) => {
-  return WithdrawModel.findByUserEmail(userEmail);
+const getWithdrawsByUser = async (email) => {
+  return WithdrawModel.findByUserEmail(email);
 };
 
 module.exports = { createWithdraw, getWithdrawsByUser };
