@@ -46,7 +46,6 @@ class AIModel {
         tradeEndDate: endDate,
         totalProfit: AITradeResult.strategyProfit,
         finalAmount: AITradeResult.projectedPayout,
-        postAITradeBalance: AITradeResult.postAITradeBalance,
         tradeCreatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
     });
