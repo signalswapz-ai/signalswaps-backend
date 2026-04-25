@@ -13,10 +13,10 @@ class AIModel {
     const userDoc = user.docs[0];
     const userRef = usersCollection.doc(userDoc.id);
 
-    const AITradeDurationProcessDays = (tradeDurationInDays) => {
-      const days = Number(tradeDurationInDays);
+    const AITradeDurationProcessDays = (data) => {
+      const days = Number(data);
       if (!Number.isInteger(days) || days <= 0) {
-        throw new Error('tradeDurationInDays must be a positive integer');
+        throw new Error('numberOfDaysOfAITrade must be a positive integer');
       }
 
       const now = new Date();
@@ -25,25 +25,28 @@ class AIModel {
       return endDate;
     };
 
-    const endDate = AITradeDurationProcessDays(AITradeResult.tradeDurationInDays);
+    const endDate = AITradeDurationProcessDays(AITradeResult.numberOfDaysOfAITrade);
 
     await db.runTransaction(async (transaction) => {
       transaction.update(userRef, {
-        balance: AITradeResult.afterAITradeUserBalance,
+        balance: AITradeResult.balanceAfterAITrade,
         updatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
 
       const tradeRef = aiTradesCollection.doc();
       transaction.set(tradeRef, {
         email: AITradeResult.email,
-        tradeDuration: AITradeResult.AiTradeDuration, // e.g., "5 Days AI Trade"
-        durationInDays: AITradeResult.tradeDurationInDays, // number
-        amount: AITradeResult.userAiEnteredAmount,
-        oldBalance: AITradeResult.userOldBalance,
-        newBalance: AITradeResult.afterAITradeUserBalance,
-        dailyROI: AITradeResult.dailyROI,
+        tradeDuration: AITradeResult.tradeDuration, // e.g., "5 Days AI Trade"
+        durationInDays: AITradeResult.numberOfDaysOfAITrade, // number
+        amount: AITradeResult.investedAmount,
+        oldBalance: AITradeResult.balanceBeforeAITrade,
+        newBalance: AITradeResult.balanceAfterAITrade,
+        dailyROI: AITradeResult.dailyAIROI,
         status: "running",
         tradeEndDate: endDate,
+        totalProfit: AITradeResult.strategyProfit,
+        finalAmount: AITradeResult.projectedPayout,
+        postAITradeBalance: AITradeResult.postAITradeBalance,
         tradeCreatedAt: admin.firestore.FieldValue.serverTimestamp()
       });
     });

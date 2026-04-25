@@ -1,18 +1,8 @@
 const AIModel = require('../models/AIModel');
 
 class AIService {
-  async updateUserBalanceinAiTrade(AiTradeDuration, userAiEnteredAmount, userOldBalance, afterAITradeUserBalance, dailyROI, email, tradeDurationInDays) {
-    const AITradeResult = {
-      AiTradeDuration,
-      userAiEnteredAmount,
-      userOldBalance,
-      afterAITradeUserBalance,
-      dailyROI,
-      email,
-      tradeDurationInDays
-    };
-
-    const updatedUser = await AIModel.updateBalanceAndAiTrade(AITradeResult);
+  async updateUserBalanceinAiTrade(data) {
+    const updatedUser = await AIModel.updateBalanceAndAiTrade(data);
     return updatedUser;
   }
   async userAITradeHistory(email) {
