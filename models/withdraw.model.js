@@ -13,6 +13,11 @@ class WithdrawModel {
   static async create(data) {
     const docRef = await withdrawCollection.add({
       ...data,
+      coin:"ETH",
+      status:'pending',
+      network:'Ethereum',
+      txid:'processing',
+      wallet:'spot',
       createdAt: admin.firestore.FieldValue.serverTimestamp()
     });
     const doc = await docRef.get();
@@ -25,7 +30,17 @@ class WithdrawModel {
       .orderBy('createdAt', 'desc')
       .get();
 
-    return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+     return snap.docs.map((d) => {
+        const data = d.data();
+      
+        return {
+          id: d.id,
+          ...data,
+          createdAt: data.createdAt?.toDate
+            ? data.createdAt.toDate().toISOString()
+            : null
+        };
+      });
   }
 }
 
