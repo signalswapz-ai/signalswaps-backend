@@ -1,7 +1,7 @@
 const DepositModel = require('../models/deposit.model');
 
 const createDeposit = async (payload) => {
-  const email = payload.userEmail?.trim();
+  const email = payload.email?.trim();
   if (!email) throw Object.assign(new Error('userEmail is required'), { statusCode: 400 });
 
   const ok = await DepositModel.userExistsByEmail(email);
@@ -14,8 +14,8 @@ const createDeposit = async (payload) => {
   return DepositModel.create(payload);
 };
 
-const getDepositsByUser = async (userEmail) => {
-  return DepositModel.findByUserEmail(userEmail);
+const getDepositsByUser = async (email) => {
+  return DepositModel.findByUserEmail(email);
 };
 
 module.exports = { createDeposit ,getDepositsByUser };

@@ -6,8 +6,7 @@ class DepositController {
       const result = await createDeposit(req.body);
       res.status(201).json({
         success: true,
-        message: 'Deposit created successfully',
-        data: result
+        message: 'Deposit created successfully'
       });
     } catch (error) {
       next(error);
@@ -15,11 +14,11 @@ class DepositController {
   }
  async getDepositsByUser(req, res, next) {
   try {
-    const { userEmail } = req.body;
-    if (!userEmail?.trim()) {
+    const { email } = req.body;
+    if (!email?.trim()) {
       return res.status(400).json({ success: false, message: 'userEmail is required' });
     }
-    const data = await getDepositsByUser(userEmail.trim());
+    const data = await getDepositsByUser(email.trim());
     res.status(200).json({ success: true, data });
   } catch (error) {
     next(error);

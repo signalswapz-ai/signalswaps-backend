@@ -2,7 +2,7 @@ const admin = require('../config/firebase/firebase');
 
 const db = admin.firestore();
 const usersCollection = db.collection('users');
-const depositCollection = db.collection('deposit');
+const depositCollection = db.collection('deposit-history');
 
 class DepositModel {
   static async userExistsByEmail(email) {
@@ -19,9 +19,9 @@ class DepositModel {
     return { id: doc.id, ...doc.data() };
   }
 
-static async findByUserEmail(userEmail) {
+static async findByUserEmail(email) {
   const snap = await depositCollection
-    .where('userEmail', '==', userEmail)
+    .where('email', '==', email)
     .orderBy('createdAt', 'desc')
     .get();
 
