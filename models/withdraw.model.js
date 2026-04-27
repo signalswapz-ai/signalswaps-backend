@@ -14,7 +14,7 @@ class WithdrawModel {
     const docRef = await withdrawCollection.add({
       ...data,
       coin:"ETH",
-      status:'pending',
+      status:'Pending',
       network:'Ethereum',
       txid:'processing',
       wallet:'spot',
