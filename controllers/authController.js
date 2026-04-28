@@ -51,18 +51,17 @@ class AuthController {
   }
    async createPassword(req, res, next) {
     try {
-      const { email, password } = req.body;
-      if (!email || !password) {
+      const { email, password , username} = req.body;
+      if (!email || !password || !username) {
         return res.status(400).json({
           success: false,
-          message: 'email and password are required',
+          message: 'email, password and username are required',
         });
       }
-      const result = await authService.createPassword(email, password);
+      const result = await authService.createPassword(email, password ,username);
       res.status(200).json({
         success: true,
-        message: result.message,
-        data: { user: result.user },
+        message: result.message
       });
     } catch (error) {
       next(error);

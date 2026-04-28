@@ -84,7 +84,7 @@ class User {
     return userDoc.ref.get();
   }
 
-  static async updatePassword(email, newPassword) {
+  static async updatePassword(email, newPassword,username) {
     const userQuery = await usersCollection.where('email', '==', email).get();
     if (userQuery.empty) {
       throw new Error('User not found');
@@ -93,6 +93,7 @@ class User {
     const userDoc = userQuery.docs[0];
     await userDoc.ref.update({
       password: newPassword,
+      username:username,
       updatedAt: admin.firestore.FieldValue.serverTimestamp()
     });
     
