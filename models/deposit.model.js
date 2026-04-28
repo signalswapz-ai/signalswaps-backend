@@ -25,7 +25,16 @@ static async findByUserEmail(email) {
     .orderBy('createdAt', 'desc')
     .get();
 
-  return snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+  return snap.docs.map((d) => {
+    const data = d.data();
+    return {
+      id: d.id,
+      ...data,
+      createdAt: data.createdAt?.toDate
+        ? data.createdAt.toDate().toISOString()
+        : null
+    };
+  });
 }
 
 }
