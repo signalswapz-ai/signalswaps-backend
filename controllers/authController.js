@@ -89,7 +89,7 @@ class AuthController {
         await sendMail({
           to: email,
           subject: 'Password Reset Link',
-          html: passwordResetTemplate(result.token)
+          html: passwordResetTemplate(result.token,email)
         });
       } catch (mailError) {
         console.error('Password reset link email failed:', mailError);

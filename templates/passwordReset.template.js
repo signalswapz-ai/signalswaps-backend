@@ -1,9 +1,9 @@
 const BRAND = 'Signal Swaps';
 const SITE_URL = 'https://www.signalswaps.com/auth/reset-password';
 
-const passwordResetTemplate = (token) => {
+const passwordResetTemplate = (token,email) => {
   const year = new Date().getFullYear();
-  const resetLink = `${SITE_URL}?token=${token}`;
+  const resetLink = `${SITE_URL}?token=${token}&email=${email}`;
 
   return `
 <!DOCTYPE html>
