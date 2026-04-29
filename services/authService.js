@@ -81,19 +81,8 @@ class AuthService {
     };
   }
 
-  async resetPassword(email, password, token) {
-
-    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
-    const tokenData = await User.getResetToken(tokenHash);
-
-    const expiresAtMs = tokenData.resetTokenExpiresAt?.toDate?.().getTime?.() || 0;
-    if (Date.now() > expiresAtMs) {
-      throw new Error('Token expired');
-    }
-
+ async resetPassword(email, password) {
     await User.updatePassword(email, password);
-    await User.clearResetToken(tokenData.id);
-
     return { message: 'Password reset successfully' };
   }
 
