@@ -82,13 +82,6 @@ class AuthService {
   }
 
   async resetPassword(email, password, confirmPassword, token) {
-    if (!email || !password || !confirmPassword || !token) {
-      throw new Error('email, password, confirmPassword and token are required');
-    }
-
-    if (password !== confirmPassword) {
-      throw new Error('Passwords do not match');
-    }
 
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
     const tokenData = await User.getResetToken(tokenHash);
