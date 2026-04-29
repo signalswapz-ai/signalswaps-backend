@@ -85,13 +85,6 @@ class AuthService {
 
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
     const tokenData = await User.getResetToken(tokenHash);
-    if (!tokenData) {
-      throw new Error('Invalid or expired token');
-    }
-
-    if (tokenData.email !== email) {
-      throw new Error('Invalid token for this email');
-    }
 
     const expiresAtMs = tokenData.resetTokenExpiresAt?.toDate?.().getTime?.() || 0;
     if (Date.now() > expiresAtMs) {
