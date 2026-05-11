@@ -8,6 +8,7 @@ const AIRoutes = require('./routes/AIRoutes')
 const depositRoutes = require('./routes/deposit.routes');
 const withdrawRoutes = require('./routes/withdraw.routes');
 const spotTradeRoutes = require('./routes/spotTrade.routes');
+const commodityTradeRoutes = require('./routes/commodityTrade.routes');
 
 
 const app = express();
@@ -41,6 +42,7 @@ app.use('/api/ai-trade', AIRoutes);
 app.use('/api/deposit', depositRoutes);
 app.use('/api/withdraw', withdrawRoutes);
 app.use('/api/spot-trade', spotTradeRoutes);
+app.use('/api/commodity-trade', commodityTradeRoutes);
 
 // 404 Handler
 app.use((req, res) => {
